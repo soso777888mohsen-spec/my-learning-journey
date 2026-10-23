@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes</title>
+<style>
+*{ box-sizing: border-box; }
+body{
+    margin: 0;
+    padding: 0 0 30px;
+    background-color: #323232;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', Arial, sans-serif;
+}
+.notes{ background-color: blue; text-align: center; }
+h1{ margin: 0; padding: 10px 0; color: white; }
+
+.search{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 10px;
+}
+#search, #content{
+    width: 150px;
+    padding: 5px;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+.tico{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+}
+.t{
+    align-self: flex-start;
+    margin-left: 20%;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 25px;
+}
+#Title, #cont{
+    width: 60%;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.bot{ display: flex; justify-content: center; margin-top: 10px; }
+button{
+    width: 200px;
+    max-width: 100%;
+    padding: 5px;
+    background-color: blue;
+    color: white;
+    border: 1px solid blue;
+    cursor: pointer;
+}
+.d-none{ display: none; }
+.updateBtn{ color: black; background-color: yellow; }
+
+#rowDisplay{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+}
+.nota{
+    background-color: rgba(250,250,250,.5);
+    width: 320px;
+    max-width: 100%;
+    padding: 10px;
+    border: #aca9a9 solid 1px;
+    border-radius: 20px;
+    font-weight: bolder;
+    word-wrap: break-word;
+}
+.NN1, .NN2{
+    width: 150px;
+    max-width: 45%;
+    background-color: rgba(250,250,250,.5);
+    border-radius: 10px;
+    font-weight: bolder;
+    transition-duration: 1s;
+}
+.NN1{ border: 1px solid red; color: red; }
+.NN2{ border: 1px solid yellow; color: yellow; }
+.NN1:hover{ background-color: red; color: white; }
+.NN2:hover{ background-color: yellow; color: black; }
+
+@media (max-width: 600px){
+    #Title, #cont{ width: 90%; }
+    .t{ margin-left: 5%; }
+}
+</style>
+</head>
+<body>
+
+<div class="notes"><h1>Notes</h1></div>
+
+<div class="search">
+    <input type="text" id="search" placeholder="Search By Title" oninput="searchByTitle(this.value)">
+    <input type="text" id="content" placeholder="Search By Content" oninput="searchByContent(this.value)">
+</div>
+
+<div class="tico">
+    <label for="Title" class="t">Title</label>
+    <input type="text" id="Title" name="Title">
+    <label for="cont" class="t">Content</label>
+    <input type="text" id="cont" name="cont">
+
+    <div class="bot">
+        <button class="list" onclick="addnote()" id="addbtn">Add</button>
+        <button class="d-none updateBtn" id="updatebtn" onclick="updatenote()">Update</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="nona">
+        <div class="row" id="rowDisplay"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+var titleInput = document.getElementById('Title');
+var contentInput = document.getElementById('cont');
+var rowDisplay = document.getElementById('rowDisplay');
+var update = document.getElementById('updatebtn');
+var add = document.getElementById('addbtn');
+var noteIndex;
+var allnotes = [];
+
+try{
+    if(localStorage.getItem('notes')){
+        allnotes = JSON.parse(localStorage.getItem('notes'));
+    }
+}catch(e){ allnotes = []; }
+displayNotes();
+
+function save(){
+    try{ localStorage.setItem('notes', JSON.stringify(allnotes)); }catch(e){}
+}
+
+function escapeHtml(text){
+    return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function validate(){
+    if(!titleInput.value.trim()){
+        Swal.fire({ icon:"error", title:"Title is empty", text:"Enter anything in title!", confirmButtonText:"Ok" });
+        return false;
+    }
+    if(!contentInput.value.trim()){
+        Swal.fire({ icon:"error", title:"Content is empty", text:"Enter anything in content!", confirmButtonText:"Ok" });
+        return false;
+    }
+    return true;
+}
+
+function addnote(){
+    if(!validate()) return;
+    allnotes.push({ title:titleInput.value, content:contentInput.value });
+    save();
+    displayNotes();
+    clearinput();
+}
+
+function noteCard(i){
+    return `
+    <div class="nota">
+        <h2>${escapeHtml(allnotes[i].title)}</h2>
+        <p>${escapeHtml(allnotes[i].content)}</p>
+        <button class="NN1" onclick="Deletenotes(${i})">Delete</button>
+        <button class="NN2" onclick="preupdate(${i})">Edit</button>
+    </div>`;
+}
+
+function displayNotes(){
+    var container = '';
+    for(var i=0; i<allnotes.length; i++){
+        container += noteCard(i);
+    }
+    rowDisplay.innerHTML = container;
+}
+
+function clearinput(){
+    titleInput.value = '';
+    contentInput.value = '';
+}
+
+function Deletenotes(index){
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, Cancel it!"
+    }).then((result) => {
+        if(result.isConfirmed){
+            allnotes.splice(index,1);
+            save();
+            displayNotes();
+            Swal.fire({ title:"Deleted!", text:"Your note has been deleted.", icon:"success" });
+        }
+    });
+}
+
+function preupdate(index){
+    noteIndex = index;
+    titleInput.value = allnotes[index].title;
+    contentInput.value = allnotes[index].content;
+    add.classList.add('d-none');
+    update.classList.remove('d-none');
+}
+
+function updatenote(){
+    if(!validate()) return;
+    allnotes.splice(noteIndex, 1, { title:titleInput.value, content:contentInput.value });
+    save();
+    displayNotes();
+    clearinput();
+    update.classList.add('d-none');
+    add.classList.remove('d-none');
+}
+
+function searchByTitle(term){
+    var container = "";
+    for(var i=0; i<allnotes.length; i++){
+        if(allnotes[i].title.toLowerCase().includes(term.toLowerCase())){
+            container += noteCard(i);
+        }
+    }
+    rowDisplay.innerHTML = container;
+}
+
+function searchByContent(cont){
+    var container = "";
+    for(var i=0; i<allnotes.length; i++){
+        if(allnotes[i].content.toLowerCase().includes(cont.toLowerCase())){
+            container += noteCard(i);
+        }
+    }
+    rowDisplay.innerHTML = container;
+}
+</script>
+</body>
+</html>

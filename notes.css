@@ -1,0 +1,136 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color:#323232;
+}
+
+.notes{
+    background-color: blue;
+}
+
+h1{
+   
+    margin-left: 300px;
+    margin-top: 0px;
+    color: white;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.search{
+  display: flex;
+  flex-direction: column;
+ align-content: flex-end;
+ 
+ 
+}
+#search{
+    width: 150px;
+    margin-left: auto;
+    padding: 5px;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+#content{
+    width: 150px;
+    margin-left: auto;
+    padding: 5px;
+    border: 1px solid white;
+    border-radius: 10px; 
+}
+.tico{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+#Title{
+    width: 60%;
+    padding: 10px;
+     border: 1px solid white;
+    border-radius: 10px; 
+    margin-bottom: 10px;
+  
+}
+ .t{ 
+   margin-bottom: 5px;
+  margin-left: -900px;
+     color: white;
+    font-size: 25px;
+} 
+#cont{
+    margin-top: 20px;
+    margin-bottom: 10px;
+     width: 60%;
+    padding: 10px; border: 1px solid white;
+    border-radius: 10px; 
+    margin-top: 10px;
+
+}
+.bot{
+ display: flex;
+ justify-content: space-between;
+}
+.bot>button{
+    margin-right: 10px;
+}
+.d-none{
+    display: none;
+}
+.updateBtn{
+    color: black;
+    background-color: yellow;
+}
+button{
+    width: 200px;
+    padding: 5px;
+    background-color: blue;
+    color: white;
+      border: 1px solid blue;
+}
+#rowDisplay {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-content: center;
+    margin-left: 110px;
+}
+.nota{
+    background-color: rgba(250, 250, 250, .5);
+    width: 320px;
+   margin-bottom: 5px;
+   margin-top: 10px;
+    padding: 10px;
+    border: #aca9a9 solid 1px;
+    border-radius: 20px;
+    font-weight: bolder;
+}
+.NN1{
+    width: 150px;
+    background-color: rgba(250, 250, 250, .5);
+    border: 1px solid red;
+    border-radius: 10px;
+    color: red;
+    font-weight: bolder;
+    transition-duration: 1s;
+}
+.NN2{
+
+    font-weight: bolder;
+    color: yellow;
+      width: 150px;
+    background-color: rgba(250, 250, 250, .5);
+     border: 1px solid yellow;
+    border-radius: 10px;
+    transition-duration: 1s;
+}
+.NN1:hover{
+    background-color: red;
+    color: white;
+    
+}
+.NN2:hover{
+    background-color: yellow;
+    color: black;
+    
+}
